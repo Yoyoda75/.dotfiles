@@ -23,26 +23,28 @@ require('mason-lspconfig').setup({
                             jedi_completion = {
                                 include_params = true,
                                 fuzzy = true,
+                                eager = true,
                             },
                             -- Type checker
                             pylsp_mypy = { enabled = true },
                             -- Import sorting
                             pylsp_isort = {
                                 enabled = true,
-                                args = { '--profile black' }
+                                args = { '--profile black' },
                             },
                             -- Linter
                             pylint = {
                                 enabled = true,
-                                executable = 'pylint'
-                            },
-                            args = {
-                                "--ignore=missing-module-docstring-",
-                                "--ignore=missing-function-docstring",
-                                "--max-line-length=120",
+                                executable = 'pylint',
+                                args = {
+                                    "--disable=missing-module-docstring",
+                                    "--disable=missing-function-docstring",
+                                    "--max-line-length=120",
+                                }
                             },
                             pyflakes = { enabled = false },
-                            pycodestyle = { enabled = false },
+                            pycodestyle = { enabled = true, ignore = { 'E501' } },
+                            flake8 = { enabled = false },
                             -- Formatter
                             black = {
                                 enabled = true,
