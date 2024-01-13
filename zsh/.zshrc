@@ -14,6 +14,8 @@ source $ZDOTDIR/powerlevel10k/powerlevel10k.zsh-theme
 alias vim="nvim"
 alias ls="ls --color=auto"
 alias zshreload="source $ZDOTDIR/.zshrc && echo 'sourced .zshrc'"
+alias python="python3"
+alias pip="pip3"
 
 # Exports
 export DOTFILES="$HOME/.dotfiles"
