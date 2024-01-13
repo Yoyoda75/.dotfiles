@@ -21,15 +21,18 @@ vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
 -- Use <leader>y to yank to the system's clipboard
-vim.keymap.set({"n", "v"}, "<leader>y", [["+y]])
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
 
 -- Use <leader>d to delete to void register
-vim.keymap.set({"n", "v"}, "<leader>d", [["_d]])
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 -- Tab management remaps
-vim.keymap.set({"n", "t"}, "<C-t>", vim.cmd.tabnew) -- Open new tab
-vim.keymap.set({"n", "t"}, "<C-x>", vim.cmd.tabc) -- Close current tab
-vim.keymap.set({"n", "t"}, "<C-l>l", vim.cmd.tabr) -- Move to tab right
-vim.keymap.set({"n", "t"}, "<C-l>h", vim.cmd.tabl) -- Move to tab left
-vim.keymap.set({"n", "t"}, "<C-n>", vim.cmd.tabn) -- Move to next tab
+vim.keymap.set({ "n", "t" }, "<C-t>", vim.cmd.tabnew) -- Open new tab
+vim.keymap.set({ "n", "t" }, "<C-x>", vim.cmd.tabc)   -- Close current tab
+vim.keymap.set({ "n", "t" }, "<C-l>l", vim.cmd.tabr)  -- Move to tab right
+vim.keymap.set({ "n", "t" }, "<C-l>h", vim.cmd.tabl)  -- Move to tab left
+vim.keymap.set({ "n", "t" }, "<C-n>", vim.cmd.tabn)   -- Move to next tab
+
+-- Save current file, move to the next tab (terminal), enter insert mode, and execute "!!"
+vim.keymap.set('n', '<leader>!!', [[:w<CR>:tabnext<CR>i!!<CR>]], { noremap = true, silent = true })

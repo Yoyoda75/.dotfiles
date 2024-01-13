@@ -1,5 +1,6 @@
 -- Line numbers and relative line numbersvim.opt.nu = true
 vim.opt.relativenumber = true
+vim.opt.number = true
 
 -- Tabulation
 vim.opt.tabstop = 4

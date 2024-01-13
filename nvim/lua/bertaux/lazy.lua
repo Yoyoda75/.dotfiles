@@ -15,11 +15,6 @@ vim.g.mapleader = " "
 
 local plugins = {
     {
-        "EdenEast/nightfox.nvim",
-        lazy = false,
-        priority = 1000,
-    },
-    {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.4',
         dependencies = { 'nvim-lua/plenary.nvim' }
@@ -28,7 +23,13 @@ local plugins = {
     'theprimeagen/harpoon',
     'tpope/vim-fugitive',
     'tpope/vim-surround',
-    'numToStr/Comment.nvim',
+    {
+        'numToStr/Comment.nvim',
+        lazy = false,
+        config = function()
+            require("Comment").setup()
+        end,
+    },
     'lewis6991/gitsigns.nvim',
     'cohama/lexima.vim',
     { 'VonHeikemen/lsp-zero.nvim',       branch = 'v3.x' },
@@ -41,6 +42,12 @@ local plugins = {
     {
         'nvim-lualine/lualine.nvim',
         dependencies = { 'nvim-tree/nvim-web-devicons', opt = true }
+    },
+    --Colorschemes
+    {
+        "EdenEast/nightfox.nvim",
+        lazy = false,
+        priority = 1000,
     },
 }
 
