@@ -43,7 +43,7 @@ require('mason-lspconfig').setup({
                                 }
                             },
                             pyflakes = { enabled = false },
-                            pycodestyle = { enabled = true, ignore = { 'E501' } },
+                            pycodestyle = { enabled = false, ignore = { 'E501' } },
                             flake8 = { enabled = false },
                             -- Formatter
                             black = {
