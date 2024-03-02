@@ -51,11 +51,23 @@ local plugins = {
         },
     },
     --Colorschemes
+    -- {
+    --     "EdenEast/nightfox.nvim",
+    --     lazy = false,
+    --     priority = 1000,
+    -- },
     {
-        "EdenEast/nightfox.nvim",
+        "craftzdog/solarized-osaka.nvim",
         lazy = false,
         priority = 1000,
-    },
+        opts = function()
+            return {
+                styles = {
+                    floats = "transparent",
+                }
+            }
+        end,
+    }
 }
 
 require("lazy").setup(plugins, opt)

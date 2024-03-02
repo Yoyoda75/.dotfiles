@@ -12,6 +12,9 @@ require('mason-lspconfig').setup({
         lua_ls = function()
             require('lspconfig').lua_ls.setup(lsp_zero.nvim_lua_ls())
         end,
+        emmet_language_server = function()
+            require('lspconfig').emmet_language_server.setup({})
+        end,
         pylsp = function()
             require('lspconfig').pylsp.setup {
                 filetypes = { 'python' },
@@ -39,6 +42,7 @@ require('mason-lspconfig').setup({
                                 args = {
                                     "--disable=missing-module-docstring",
                                     "--disable=missing-function-docstring",
+                                    "--disable=import-error",
                                     "--max-line-length=120",
                                 }
                             },
@@ -52,10 +56,6 @@ require('mason-lspconfig').setup({
                             },
                             autopep8 = {
                                 enabled = false,
-                                args = {
-                                    "--max-line-length=120",
-                                    "--experimental"
-                                }
                             },
                             yapf = { enabled = false },
                             -- Refactoring
