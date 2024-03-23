@@ -1,4 +1,3 @@
 vim.cmd([[syntax enable]])
--- vim.cmd([[colorscheme nightfox]])
-vim.cmd([[colorscheme solarized-osaka]])
+vim.cmd([[colorscheme carbonfox]])
 require('lualine').setup({})
