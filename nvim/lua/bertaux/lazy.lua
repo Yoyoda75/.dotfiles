@@ -17,7 +17,7 @@ local plugins = {
     {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.4',
-        dependencies = { 'nvim-lua/plenary.nvim' }
+        dependencies = { 'nvim-lua/plenary.nvim', 'sharkdp/fd' }
     },
     { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
     'theprimeagen/harpoon',
@@ -50,23 +50,14 @@ local plugins = {
         },
     },
     --Colorschemes
-    -- {
-    --     "EdenEast/nightfox.nvim",
-    --     lazy = false,
-    --     priority = 1000,
-    -- },
     {
-        "craftzdog/solarized-osaka.nvim",
+        "EdenEast/nightfox.nvim",
         lazy = false,
         priority = 1000,
-        opts = function()
-            return {
-                styles = {
-                    floats = "transparent",
-                }
-            }
-        end,
-    }
+        opts = {
+            options = { transparent = true }
+        }
+    },
 }
 
 require("lazy").setup(plugins, opt)
