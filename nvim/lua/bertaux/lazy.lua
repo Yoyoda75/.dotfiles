@@ -21,6 +21,7 @@ local plugins = {
     },
     { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
     'theprimeagen/harpoon',
+    'tpope/vim-fugitive',
     'tpope/vim-surround',
     {
         'numToStr/Comment.nvim',
