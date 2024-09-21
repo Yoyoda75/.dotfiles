@@ -14,9 +14,14 @@ source $ZDOTDIR/powerlevel10k/powerlevel10k.zsh-theme
 alias vim="nvim"
 alias ls="ls --color=auto"
 alias zshreload="source $ZDOTDIR/.zshrc && echo 'sourced .zshrc'"
-alias python="python3"
-alias pip="pip3"
 
 # Exports
 export DOTFILES="$HOME/.dotfiles"
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# PATH
+PATH="/opt/homebrew/bin:$PATH"
+PATH="/opt/homebrew/opt/node@20/bin:$PATH"
+
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)

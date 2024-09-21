@@ -42,6 +42,7 @@ return {
                     ['<C-b>'] = cmp_action.luasnip_jump_backward(),
                     ['<Tab>'] = cmp_action.tab_complete(),
                     ['<S-Tab>'] = cmp_action.select_prev_or_fallback(),
+                    ['<CR>'] = cmp.mapping.confirm({ select = true }),
                 }),
                 snippet = {
                     expand = function(args)
@@ -75,7 +76,7 @@ return {
             end)
 
             require('mason-lspconfig').setup({
-                ensure_installed = {},
+                ensure_installed = { 'emmet_language_server', 'pylsp', 'ts_ls' },
                 handlers = {
                     -- this first function is the "default handler"
                     -- it applies to every language server without a "custom handler"
@@ -91,6 +92,9 @@ return {
                     end,
                     emmet_language_server = function()
                         require('lspconfig').emmet_language_server.setup({})
+                    end,
+                    ts_ls= function()
+                        require('lspconfig').ts_ls.setup({})
                     end,
                     pylsp = function()
                         require('lspconfig').pylsp.setup {
@@ -120,7 +124,7 @@ return {
                                                 "--disable=missing-module-docstring",
                                                 "--disable=missing-function-docstring",
                                                 "--disable=import-error",
-                                                "--max-line-length=120",
+                                                -- "--max-line-length=120",
                                             }
                                         },
                                         pyflakes = { enabled = false },
@@ -129,7 +133,7 @@ return {
                                         -- Formatter
                                         black = {
                                             enabled = true,
-                                            line_length = 120,
+                                            -- line_length = 120,
                                         },
                                         autopep8 = {
                                             enabled = false,
