@@ -15,17 +15,17 @@ vim.opt.smartindent = true
 vim.opt.wrap = false
 
 -- No highlight search and incremental search
-vim.opt.hlsearch = false
+vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
 
-vim.opt.colorcolumn = "100"
+vim.opt.colorcolumn = "88"
 
 vim.opt.scrolloff = 8
 
 -- Show open tabs (=1 to only show it when more than one tab open)
-vim.opt.showtabline=2
+vim.opt.showtabline = 2
 
 -- Decrease time required to enter a command
-vim.opt.timeoutlen=500
+vim.opt.timeoutlen = 500

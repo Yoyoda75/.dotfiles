@@ -1,5 +1,5 @@
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex) -- Use <leader>pv to open the file tree (pv = preview)
+-- vim.keymap.set("n", "<leader>pv", vim.cmd.Ex) -- DISABLED FOR OIL.NVIM - Use <leader>pv to open the file tree (pv = preview)
 vim.keymap.set("n", "<leader>tt", function()
     vim.cmd("tabnew")
     vim.cmd("terminal")
@@ -36,3 +36,6 @@ vim.keymap.set({ "n", "t" }, "<C-n>", vim.cmd.tabn)   -- Move to next tab
 
 -- Save current file, move to the next tab (terminal), enter insert mode, and execute "!!"
 vim.keymap.set('n', '<leader>!!', [[:w<CR>:tabnext<CR>i!!<CR>]], { noremap = true, silent = true })
+
+-- Bind Leader w to save
+vim.keymap.set("n", "<leader>w", "<ESC>:w<CR>")

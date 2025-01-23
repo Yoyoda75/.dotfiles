@@ -76,7 +76,7 @@ return {
             end)
 
             require('mason-lspconfig').setup({
-                ensure_installed = { 'emmet_language_server', 'pylsp', 'ts_ls' },
+                ensure_installed = { 'emmet_language_server', 'pylsp', 'ts_ls', 'lua_ls', 'eslint' },
                 handlers = {
                     -- this first function is the "default handler"
                     -- it applies to every language server without a "custom handler"
@@ -93,8 +93,11 @@ return {
                     emmet_language_server = function()
                         require('lspconfig').emmet_language_server.setup({})
                     end,
-                    ts_ls= function()
+                    ts_ls = function()
                         require('lspconfig').ts_ls.setup({})
+                    end,
+                    eslint = function()
+                        require("lspconfig").eslint.setup({})
                     end,
                     pylsp = function()
                         require('lspconfig').pylsp.setup {
