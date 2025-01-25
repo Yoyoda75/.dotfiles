@@ -141,19 +141,19 @@ return {
 											},
 										},
 										pyflakes = { enabled = false },
-										pycodestyle = { enabled = false, ignore = { "E501" } },
+										pycodestyle = { enabled = true, ignore = { "E501" } },
 										flake8 = { enabled = false },
 										-- Formatter
 										black = {
 											enabled = true,
-											-- line_length = 120,
+											line_length = 88,
 										},
 										autopep8 = {
 											enabled = false,
 										},
 										yapf = { enabled = false },
 										-- Refactoring
-										pylsp_rope = { enabled = true },
+										pylsp_rope = { enabled = false },
 									},
 								},
 							},
@@ -162,7 +162,9 @@ return {
 				},
 			})
 
-			local cmp_select = { behavior = cmp.SelectBehavior.Select }
+			-- Autocompletion
+			local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+			cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 			cmp.setup({
 				preselect = "item",
 				completion = {
@@ -173,21 +175,10 @@ return {
 						require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
 					end,
 				},
+				formatting = { format = require("nvim-highlight-colors").format },
+
 				mapping = cmp.mapping.preset.insert({
-					-- Simple tab complete
-					["<Tab>"] = cmp.mapping(function(fallback)
-						local col = vim.fn.col(".") - 1
-
-						if cmp.visible() then
-							cmp.select_next_item({ behavior = "select" })
-						elseif col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
-							fallback()
-						else
-							cmp.complete()
-						end
-					end, { "i", "s" }),
-
-					-- Go to previous item
+					["<Tab>"] = cmp.mapping.select_next_item({ behavior = "select" }),
 					["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = "select" }),
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
 					["<C-n"] = cmp.mapping.complete(),
