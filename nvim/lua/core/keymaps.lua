@@ -1,5 +1,6 @@
 vim.g.mapleader = " "
--- vim.keymap.set("n", "<leader>pv", vim.cmd.Ex) -- DISABLED FOR OIL.NVIM - Use <leader>pv to open the file tree (pv = preview)
+vim.g.localmapleader = " "
+
 vim.keymap.set("n", "<leader>tt", function()
     vim.cmd("tabnew")
     vim.cmd("terminal")
