@@ -40,3 +40,6 @@ vim.keymap.set('n', '<leader>!!', [[:w<CR>:tabnext<CR>i!!<CR>]], { noremap = tru
 
 -- Bind Leader w to save
 vim.keymap.set("n", "<leader>w", "<ESC>:w<CR>")
+--
+-- Clear search with <esc>
+vim.keymap.set("n", "<esc>", ":noh<cr><esc>", { desc = "Escape and clear hlsearch" })
