@@ -1,156 +1,187 @@
 return {
-    {
-        'VonHeikemen/lsp-zero.nvim',
-        branch = 'v3.x',
-        lazy = true,
-        config = false,
-        init = function()
-            -- Disable automatic setup, we are doing it manually
-            vim.g.lsp_zero_extend_cmp = 0
-            vim.g.lsp_zero_extend_lspconfig = 0
-        end,
-    },
-    {
-        'williamboman/mason.nvim',
-        lazy = false,
-        config = true,
-    },
+	-- Autocompletion
+	{
+		"hrsh7th/nvim-cmp",
+		dependencies = {
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+			"hrsh7th/cmp-cmdline",
+			"hrsh7th/nvim-cmp",
+			"L3MON4D3/LuaSnip",
+			"saadparwaiz1/cmp_luasnip",
+			"j-hui/fidget.nvim",
+		},
+		event = "InsertEnter",
+		opts = function(_, opts)
+			opts.sources = opts.sources or {}
+			table.insert(opts.sources, {
+				name = "lazydev",
+				group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+			})
+		end,
+		config = function() end,
+	},
+	-- LSP
+	{
+		"neovim/nvim-lspconfig",
+		cmd = { "LspInfo", "LspInstall", "LspStart" },
+		event = { "BufReadPre", "BufNewFile" },
+		dependencies = {
+			{ "hrsh7th/cmp-nvim-lsp" },
+			{ "williamboman/mason.nvim" },
+			{ "williamboman/mason-lspconfig.nvim" },
+			{
+				"folke/lazydev.nvim",
+				ft = "lua",
+				opts = {
+					library = {
+						{ path = "luvit-meta/library", words = { "vim%.uv" } },
+					},
+				},
+			},
+		},
+		init = function()
+			-- Reserve a space in the gutter
+			-- This will avoid an annoying layout shift in the screen
+			vim.opt.signcolumn = "yes"
+		end,
+		config = function()
+			local lsp_defaults = require("lspconfig").util.default_config
+			local cmp = require("cmp")
+			local cmp_lsp = require("cmp_nvim_lsp")
+			local capabilities = vim.tbl_deep_extend(
+				"force",
+				{},
+				vim.lsp.protocol.make_client_capabilities(),
+				cmp_lsp.default_capabilities()
+			)
 
-    -- Autocompletion
-    {
-        'hrsh7th/nvim-cmp',
-        event = 'InsertEnter',
-        dependencies = {
-            { 'L3MON4D3/LuaSnip' },
-        },
-        config = function()
-            -- Here is where you configure the autocompletion settings.
-            local lsp_zero = require('lsp-zero')
-            lsp_zero.extend_cmp()
+			-- Add cmp_nvim_lsp capabilities settings to lspconfig
+			-- This should be executed before you configure any language server
+			lsp_defaults.capabilities =
+				vim.tbl_deep_extend("force", lsp_defaults.capabilities, require("cmp_nvim_lsp").default_capabilities())
 
-            -- And you can configure cmp even more, if you want to.
-            local cmp = require('cmp')
-            local cmp_action = lsp_zero.cmp_action()
+			-- LspAttach is where you enable features that only work
+			-- if there is a language server active in the file
+			vim.api.nvim_create_autocmd("LspAttach", {
+				desc = "LSP actions",
+				callback = function(event)
+					local opts = { buffer = event.buf }
 
-            cmp.setup({
-                formatting = lsp_zero.cmp_format({ details = true }),
-                mapping = cmp.mapping.preset.insert({
-                    ['<C-Space>'] = cmp.mapping.complete(),
-                    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-                    ['<C-d>'] = cmp.mapping.scroll_docs(4),
-                    ['<C-f>'] = cmp_action.luasnip_jump_forward(),
-                    ['<C-b>'] = cmp_action.luasnip_jump_backward(),
-                    ['<Tab>'] = cmp_action.tab_complete(),
-                    ['<S-Tab>'] = cmp_action.select_prev_or_fallback(),
-                    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-                }),
-                snippet = {
-                    expand = function(args)
-                        require('luasnip').lsp_expand(args.body)
-                    end,
-                },
-            })
-        end
-    },
+					vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
+					vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
+					vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
+					vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
+					vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
+					vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
+					vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
+					vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
+					vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
+					vim.keymap.set("n", "<F4>", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
+				end,
+			})
+			require("mason-lspconfig").setup({
+				ensure_installed = {
 
-    -- LSP
-    {
-        'neovim/nvim-lspconfig',
-        cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
-        event = { 'BufReadPre', 'BufNewFile' },
-        dependencies = {
-            { 'hrsh7th/cmp-nvim-lsp' },
-            { 'williamboman/mason-lspconfig.nvim' },
-        },
-        config = function()
-            -- This is where all the LSP shenanigans will live
-            local lsp_zero = require('lsp-zero')
-            lsp_zero.extend_lspconfig()
+					"yamlls",
+					"docker_compose_language_service",
+					"dockerls",
+					"emmet_language_server",
+					"eslint",
+					"html",
+					"jsonls",
+					"ts_ls",
+				},
+				automatic_installation = true,
+				handlers = {
+					-- this first function is the "default handler"
+					-- it applies to every language server without a "custom handler"
+					function(server_name)
+						require("lspconfig")[server_name].setup({
+							capabilities = capabilities,
+						})
+					end,
+					lua_ls = function()
+						require("lspconfig").lua_ls.setup({
+							diagnostics = {
+								disable = { "missing-parameters", "missing-fields" },
+							},
+						})
+					end,
+					pylsp = function()
+						require("lspconfig").pylsp.setup({
+							filetypes = { "python" },
+							settings = {
+								pylsp = {
+									plugins = {
+										jedi_signature_help = { enabled = true },
+										-- Auto-completion
+										jedi_completion = {
+											include_params = true,
+											fuzzy = true,
+											eager = true,
+										},
+										-- Type checker
+										pylsp_mypy = { enabled = true },
+										-- Import sorting
+										pylsp_isort = {
+											enabled = true,
+											args = { "--profile black" },
+										},
+										-- Linter
+										pylint = {
+											enabled = true,
+											executable = "pylint",
+											args = {
+												"--disable=missing-module-docstring",
+												"--disable=missing-function-docstring",
+												"--disable=import-error",
+												-- "--max-line-length=120",
+											},
+										},
+										pyflakes = { enabled = false },
+										pycodestyle = { enabled = false, ignore = { "E501" } },
+										flake8 = { enabled = false },
+										-- Formatter
+										black = {
+											enabled = true,
+											-- line_length = 120,
+										},
+										autopep8 = {
+											enabled = false,
+										},
+										yapf = { enabled = false },
+										-- Refactoring
+										pylsp_rope = { enabled = true },
+									},
+								},
+							},
+						})
+					end,
+				},
+			})
 
-            --- if you want to know more about lsp-zero and mason.nvim
-            --- read this: https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/integrate-with-mason-nvim.md
-            lsp_zero.on_attach(function(client, bufnr)
-                -- see :help lsp-zero-keybindings
-                -- to learn the available actions
-                lsp_zero.default_keymaps({ buffer = bufnr })
-            end)
-
-            require('mason-lspconfig').setup({
-                ensure_installed = { 'emmet_language_server', 'pylsp', 'ts_ls', 'lua_ls', 'eslint' },
-                handlers = {
-                    -- this first function is the "default handler"
-                    -- it applies to every language server without a "custom handler"
-                    function(server_name)
-                        require('lspconfig')[server_name].setup({})
-                    end,
-
-                    -- this is the "custom handler" for `lua_ls`
-                    lua_ls = function()
-                        -- (Optional) Configure lua language server for neovim
-                        local lua_opts = lsp_zero.nvim_lua_ls()
-                        require('lspconfig').lua_ls.setup(lua_opts)
-                    end,
-                    emmet_language_server = function()
-                        require('lspconfig').emmet_language_server.setup({})
-                    end,
-                    ts_ls = function()
-                        require('lspconfig').ts_ls.setup({})
-                    end,
-                    eslint = function()
-                        require("lspconfig").eslint.setup({})
-                    end,
-                    pylsp = function()
-                        require('lspconfig').pylsp.setup {
-                            filetypes = { 'python' },
-                            settings = {
-                                pylsp = {
-                                    plugins = {
-                                        jedi_signature_help = { enabled = true },
-                                        -- Auto-completion
-                                        jedi_completion = {
-                                            include_params = true,
-                                            fuzzy = true,
-                                            eager = true,
-                                        },
-                                        -- Type checker
-                                        pylsp_mypy = { enabled = true },
-                                        -- Import sorting
-                                        pylsp_isort = {
-                                            enabled = true,
-                                            args = { '--profile black' },
-                                        },
-                                        -- Linter
-                                        pylint = {
-                                            enabled = true,
-                                            executable = 'pylint',
-                                            args = {
-                                                "--disable=missing-module-docstring",
-                                                "--disable=missing-function-docstring",
-                                                "--disable=import-error",
-                                                -- "--max-line-length=120",
-                                            }
-                                        },
-                                        pyflakes = { enabled = false },
-                                        pycodestyle = { enabled = false, ignore = { 'E501' } },
-                                        flake8 = { enabled = false },
-                                        -- Formatter
-                                        black = {
-                                            enabled = true,
-                                            -- line_length = 120,
-                                        },
-                                        autopep8 = {
-                                            enabled = false,
-                                        },
-                                        yapf = { enabled = false },
-                                        -- Refactoring
-                                        pylsp_rope = { enabled = true },
-                                    }
-                                }
-                            }
-                        }
-                    end
-                }
-            })
-        end
-    }
+			local cmp_select = { behavior = cmp.SelectBehavior.Select }
+			cmp.setup({
+				snippet = {
+					expand = function(args)
+						require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+					end,
+				},
+				mapping = cmp.mapping.preset.insert({
+					["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
+					["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
+					["<C-y>"] = cmp.mapping.confirm({ select = true }),
+					["<C-Space>"] = cmp.mapping.complete(),
+				}),
+				sources = cmp.config.sources({
+					{ name = "nvim_lsp" },
+					{ name = "luasnip" }, -- For luasnip users.
+				}, {
+					{ name = "buffer" },
+				}),
+			})
+		end,
+	},
 }
