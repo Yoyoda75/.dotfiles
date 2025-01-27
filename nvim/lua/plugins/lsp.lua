@@ -92,6 +92,7 @@ return {
 					"html",
 					"jsonls",
 					"ts_ls",
+                    "ruff",
 				},
 				automatic_installation = true,
 				handlers = {

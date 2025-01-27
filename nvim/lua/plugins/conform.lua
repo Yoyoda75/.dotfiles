@@ -31,7 +31,7 @@ return {
 			markdown = { "prettier" },
 			graphql = { "prettier" },
 			lua = { "stylua" },
-			python = { "isort", "black" },
+			python = { "ruff" },
 		},
 		-- Set default options
 		default_format_opts = {
