@@ -179,9 +179,9 @@ return {
 				formatting = { format = require("nvim-highlight-colors").format },
 
 				mapping = cmp.mapping.preset.insert({
-					["<Tab>"] = cmp.mapping.select_next_item({ behavior = "select" }),
-					["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = "select" }),
-					["<CR>"] = cmp.mapping.confirm({ select = true }),
+					["<S-Tab>"] = cmp.mapping.select_next_item({ behavior = "select" }),
+					-- ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = "select" }),
+					["<Tab>"] = cmp.mapping.confirm({ select = true }),
 					["<C-n"] = cmp.mapping.complete(),
 				}),
 				sources = cmp.config.sources({

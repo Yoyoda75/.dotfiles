@@ -30,7 +30,7 @@ return {
             hide_fillchars = true,
             terminal_colors = false,
             cache = true,
-            borderless_telescope = { border = false, style = "flat" },
+            borderless_pickers = { border = false, style = "flat" },
         })
         -- vim.cmd [[syntax enable]]
         vim.cmd("colorscheme cyberdream")
