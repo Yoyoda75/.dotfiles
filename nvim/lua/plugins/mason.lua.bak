@@ -3,6 +3,7 @@ return {
 	cmd = "Mason",
 	keys = { { "<leader>cm", ":Mason<cr>", desc = "Mason" } },
 	build = ":MasonUpdate",
+    lazy = false,
 	config = function()
 		require("mason").setup({
 			ui = {
@@ -34,6 +35,7 @@ return {
 			"stylua",
 			"typescript-language-server",
 			"yaml-language-server",
+            -- "ruff",
 		}
 
 		local mr = require("mason-registry")

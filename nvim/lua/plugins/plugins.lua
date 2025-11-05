@@ -1,16 +1,9 @@
 return {
-	"tpope/vim-surround",
-	"lewis6991/gitsigns.nvim",
-	-- {
-	-- 	"kdheepak/lazygit.nvim",
-	-- 	-- optional for floating window border decoration
-	-- 	dependencies = {
-	-- 		"nvim-lua/plenary.nvim",
-	-- 	},
-	-- },
+	"cohama/lexima.vim",
+	{ "lewis6991/gitsigns.nvim", opts = {} },
+	{ "kylechui/nvim-surround", opts = {event = "VeryLazy"} },
 	{
-		"windwp/nvim-autopairs",
-		event = "InsertEnter",
-		config = true,
+		"kkoomen/vim-doge",
+		build = ":call doge#install()",
 	},
 }

@@ -1,0 +1,192 @@
+return {
+	-- -- Autocompletion
+	-- {
+	-- 	"hrsh7th/nvim-cmp",
+	-- 	dependencies = {
+	-- 		"hrsh7th/cmp-nvim-lsp",
+	-- 		"hrsh7th/cmp-buffer",
+	-- 		"hrsh7th/cmp-path",
+	-- 		"hrsh7th/cmp-cmdline",
+	-- 		"hrsh7th/nvim-cmp",
+	-- 		"L3MON4D3/LuaSnip",
+	-- 		"saadparwaiz1/cmp_luasnip",
+	-- 		"j-hui/fidget.nvim",
+	-- 		"windwp/nvim-autopairs",
+	-- 	},
+	-- 	event = "InsertEnter",
+	-- 	opts = function(_, opts)
+	-- 		opts.sources = opts.sources or {}
+	-- 		table.insert(opts.sources, {
+	-- 			name = "lazydev",
+	-- 			group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+	-- 		})
+	-- 	end,
+	-- 	config = function() end,
+	-- },
+
+	-- LSP
+	{
+		"neovim/nvim-lspconfig",
+		cmd = { "LspInfo", "LspInstall", "LspStart" },
+		event = { "BufReadPre", "BufNewFile" },
+		dependencies = {
+			{ "williamboman/mason.nvim" },
+			{ "williamboman/mason-lspconfig.nvim" },
+			{
+				"folke/lazydev.nvim",
+				ft = "lua",
+				opts = {
+					library = {
+						{ path = "luvit-meta/library", words = { "vim%.uv" } },
+					},
+				},
+			},
+		},
+		config = function()
+			-- LspAttach is where you enable features that only work
+			-- if there is a language server active in the file
+			vim.api.nvim_create_autocmd("LspAttach", {
+				group = vim.api.nvim_create_augroup("my.lsp", {}),
+				desc = "LSP actions",
+				callback = function(event)
+					local client = assert(vim.lsp.get_client_by_id(event.data.client_id))
+					if client:supports_method("textDocument/completion") then
+						vim.lsp.completion.enable(true, client.id, event.buf, { autotrigger = true })
+					end
+
+					local opts = { buffer = event.buf }
+					vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
+					vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
+					vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
+					vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
+					vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
+					vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
+					-- vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
+					-- vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
+					-- vim.keymap.set("n", "<F4>", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
+				end,
+			})
+			require("mason-lspconfig").setup({
+				ensure_installed = {
+					"yamlls",
+					"docker_compose_language_service",
+					"dockerls",
+					"emmet_language_server",
+					"eslint",
+					"html",
+					"jsonls",
+					"ts_ls",
+					"ruff",
+				},
+				automatic_installation = true,
+				handlers = {
+					-- this first function is the "default handler"
+					-- it applies to every language server without a "custom handler"
+					function(server_name)
+						require("lspconfig")[server_name].setup({})
+					end,
+					lua_ls = function()
+						require("lspconfig").lua_ls.setup({
+							diagnostics = {
+								disable = { "missing-parameters", "missing-fields" },
+							},
+						})
+					end,
+					jinja_lsp = function()
+						require("lspconfig").jinja_lsp.setup({
+							cmd = { "jinja-lsp" },
+							filetypes = { "jinja", "python" },
+							root_dir = function(fname)
+								return vim.fn.getcwd() -- Adjust if you have a specific root directory structure
+							end,
+							init_options = {
+								templates = "./templates",
+								backend = { "./src" },
+								lang = "python",
+							},
+						})
+					end,
+					pylsp = function()
+						require("lspconfig").pylsp.setup({
+							filetypes = { "python" },
+							settings = {
+								pylsp = {
+									plugins = {
+										-- ===========================================
+										-- Disable ALL formatting plugins in pylsp
+										-- (Ruff/Conform will handle formatting)
+										-- ===========================================
+										black = { enabled = false },
+										autopep8 = { enabled = false },
+										yapf = { enabled = false },
+										pylsp_isort = { enabled = false }, -- Optional: Disable if you use Ruff for imports
+
+										-- ===========================================
+										-- Enable Linters (optional)
+										-- Keep these enabled if you want pylsp's own linters
+										-- OR disable them and use Ruff for linting instead
+										-- ===========================================
+										pylint = {
+											enabled = false,
+											args = {
+												"--disable=missing-module-docstring",
+												"--disable=missing-function-docstring",
+												"--disable=import-error",
+												"--max-line-length=88",
+											},
+										}, -- Enable if you want pylint diagnostics
+										pyflakes = { enabled = false }, -- Disable if using Ruff for linting
+										pycodestyle = { enabled = false }, -- Disable if using Ruff for linting
+										flake8 = { enabled = false }, -- Disable if using Ruff for linting
+
+										-- ===========================================
+										-- Enable Core Features
+										-- (Autocompletion, type checking, etc.)
+										-- ===========================================
+										jedi_completion = {
+											enabled = true,
+											include_params = true,
+											fuzzy = true,
+											eager = true,
+										}, -- Autocompletion
+										jedi_signature_help = { enabled = true }, -- Function signatures
+										pylsp_mypy = { enabled = true }, -- Type checking (if you use mypy)
+										pylsp_rope = { enabled = false }, -- Refactoring (e.g., rename variables)
+									},
+								},
+							},
+						})
+					end,
+				},
+			})
+
+			-- -- Autocompletion
+			-- local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+			-- cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+			-- cmp.setup({
+			-- 	preselect = "item",
+			-- 	completion = {
+			-- 		completeopt = "menu,menuone,noinsert",
+			-- 	},
+			-- 	snippet = {
+			-- 		expand = function(args)
+			-- 			require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+			-- 		end,
+			-- 	},
+			-- 	formatting = { format = require("nvim-highlight-colors").format },
+			--
+			-- 	mapping = cmp.mapping.preset.insert({
+			-- 		["<S-Tab>"] = cmp.mapping.select_next_item({ behavior = "select" }),
+			-- 		["<Tab>"] = cmp.mapping.confirm({ select = true }),
+			-- 		["<C-n"] = cmp.mapping.complete(),
+			-- 	}),
+			-- 	sources = cmp.config.sources({
+			-- 		{ name = "nvim_lsp" },
+			-- 		{ name = "luasnip" }, -- For luasnip users.
+			-- 	}, {
+			-- 		{ name = "buffer" },
+			-- 	}),
+			-- })
+		end,
+	},
+}

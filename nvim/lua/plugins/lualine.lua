@@ -17,7 +17,7 @@ return {
             snacks_terminal = { name = "terminal", icon = "🐚" },
             mason = { name = "mason", icon = "🔨" },
             TelescopePrompt = { name = "telescope", icon = "🔍" },
-            -- ["copilot-chat"] = { name = "copilot", icon = "🤖" },
+            ["copilot-chat"] = { name = "copilot", icon = "🤖" },
         }
 
         return {
