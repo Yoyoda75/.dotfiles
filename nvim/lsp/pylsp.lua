@@ -43,15 +43,19 @@ return {
 				-- Enable Core Features
 				-- (Autocompletion, type checking, etc.)
 				-- ===========================================
-				jedi_completion = {
-					enabled = true,
-					include_params = true,
-					fuzzy = true,
-					eager = true,
-				}, -- Autocompletion
+				-- jedi_completion = {
+				-- 	enabled = true,
+				-- 	include_params = true,
+				-- 	fuzzy = true,
+				-- 	eager = true,
+				-- }, -- Autocompletion
+				jedi_completion = { enabled = true },
 				jedi_signature_help = { enabled = true }, -- Function signatures
 				pylsp_mypy = { enabled = true }, -- Type checking (if you use mypy)
 				pylsp_rope = { enabled = false }, -- Refactoring (e.g., rename variables)
+				jedi_hover = { enabled = true },
+				jedi_references = { enabled = true },
+				jedi_symbols = { enabled = true },
 			},
 		},
 	},
