@@ -17,7 +17,6 @@ return {
 	---@module "conform"
 	---@type conform.setupOpts
 	opts = {
-		log_level = vim.log.levels.DEBUG,
 		-- Define your formatters
 		formatters_by_ft = {
 			javascript = { "prettier" },
