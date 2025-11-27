@@ -62,7 +62,7 @@ return {
 		statuscolumn = { enabled = true },
 		words = { enabled = true },
 		scope = { enabled = true },
-		-- lazygit = { enabled = true },
+		lazygit = { enabled = true },
 		styles = {
 			notification = {
 				wo = { wrap = true }, -- Wrap notifications
@@ -70,13 +70,6 @@ return {
 		},
 	},
 	keys = {
-		{
-			"<leader>z",
-			function()
-				Snacks.zen()
-			end,
-			desc = "Toggle Zen Mode",
-		},
 		{
 			"<leader>n",
 			function()
