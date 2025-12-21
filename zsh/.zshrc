@@ -15,13 +15,15 @@ source $ZDOTDIR/powerlevel10k/powerlevel10k.zsh-theme
 autoload -U compinit && compinit
 
 # Aliases
-alias vim="nvim"
+alias v="nvim"
 alias ls="ls --color=auto"
 alias zshreload="source $ZDOTDIR/.zshrc && echo 'sourced .zshrc'"
+alias bubu="brew update; brew upgrade; brew autoremove; brew cleanup"
 
 # Exports
 export DOTFILES="$HOME/.dotfiles"
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # PATH
 PATH="/opt/homebrew/bin:$PATH"
@@ -36,3 +38,4 @@ setopt HIST_EXPIRE_DUPS_FIRST
 
 # Set up fzf key bindings and fuzzy completion
 source <(fzf --zsh)
+
