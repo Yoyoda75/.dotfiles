@@ -1,5 +1,5 @@
 return {
-	"cohama/lexima.vim",
+	-- "cohama/lexima.vim",
 	{ "lewis6991/gitsigns.nvim", opts = {} },
 	{ "kylechui/nvim-surround", opts = {event = "VeryLazy"} },
 	{
