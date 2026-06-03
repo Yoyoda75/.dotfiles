@@ -37,7 +37,8 @@ return {
 				"stylua",
 				"typescript-language-server",
 				"yaml-language-server",
-				-- "ruff",
+				-- "ty",
+				"ruff",
 			}
 
 			local mr = require("mason-registry")
